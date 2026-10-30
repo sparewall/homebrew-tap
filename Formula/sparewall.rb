@@ -3,28 +3,28 @@
 class Sparewall < Formula
   desc "CLI for Sparewall, an image-based Linux firewall"
   homepage "https://sparewall.org"
-  version "0.2.0"
+  version "0.3.0"
   license "GPL-3.0-only"
 
   on_macos do
     on_arm do
-      url "https://github.com/sparewall/sparewall/releases/download/v0.2.0/sparewall-0.2.0-aarch64-darwin.tar.gz"
-      sha256 "cbb2fd274846153bbffd50dd7f94753d054b12c61c64bca0694fde2d32f4d5a1"
+      url "https://github.com/sparewall/sparewall/releases/download/v0.3.0/sparewall-0.3.0-aarch64-darwin.tar.gz"
+      sha256 "536c6726fc6cce3c17abe11f5de8aafa5ce8e45ec46e855c6c86b4be1ba04a09"
     end
     on_intel do
-      url "https://github.com/sparewall/sparewall/releases/download/v0.2.0/sparewall-0.2.0-x86_64-darwin.tar.gz"
-      sha256 "927a6da0b606dbf66c28fc694a35e1ef47e580effa0dfc98b58fea0bbbb4198a"
+      url "https://github.com/sparewall/sparewall/releases/download/v0.3.0/sparewall-0.3.0-x86_64-darwin.tar.gz"
+      sha256 "bf566ca23c6ae92902e5f6c04ac945a47cd28059d6f43c43ce45db36ff842102"
     end
   end
 
   on_linux do
     on_intel do
-      url "https://github.com/sparewall/sparewall/releases/download/v0.2.0/sparewall-0.2.0-x86_64-linux.tar.gz"
-      sha256 "9ce3800e8812e5e88915228b88018fabdaecdac557b5aa6ed74ed6d4458bed41"
+      url "https://github.com/sparewall/sparewall/releases/download/v0.3.0/sparewall-0.3.0-x86_64-linux.tar.gz"
+      sha256 "600c2ab02367ac847833487171b6c5636f297c8889d026adb53046d32a793d40"
     end
     on_arm do
-      url "https://github.com/sparewall/sparewall/releases/download/v0.2.0/sparewall-0.2.0-aarch64-linux.tar.gz"
-      sha256 "05f085114045aa1f8df5b336b09eefbbef67d2a8943ebeb6a413faf0f641c110"
+      url "https://github.com/sparewall/sparewall/releases/download/v0.3.0/sparewall-0.3.0-aarch64-linux.tar.gz"
+      sha256 "13b996d8df3d34604eb585bb158bf0e05adc2b86db18660a595bb7bc616e6e28"
     end
   end
 
@@ -33,25 +33,18 @@ class Sparewall < Formula
     generate_completions_from_executable(bin/"sparewall", "completion")
   end
 
-  def post_install
-    return unless OS.mac?
-
-    # The macOS build is signed ad hoc, not notarized: should the download
-    # carry the quarantine attribute, macOS would refuse to run it.
-    # Homebrew installs the binary read-only, and removing an attribute
-    # needs write permission.
-    f = prefix/"bin/sparewall"
-    quarantined = -> { quiet_system "xattr", "-p", "com.apple.quarantine", f }
-    return unless quarantined.call
-
-    mode = f.stat.mode
-    begin
-      f.chmod(mode | 0200)
-      system "xattr", "-d", "com.apple.quarantine", f
-    ensure
-      f.chmod(mode)
+  # The macOS build is signed ad hoc, not notarized: should the download
+  # carry the quarantine attribute, macOS would refuse to run it. Homebrew
+  # installs the binary read-only, and removing an attribute needs write
+  # permission, so it is lent and taken back. xattr fails when there is no
+  # attribute to remove, which is the usual case.
+  post_install_steps do
+    on_macos do
+      set_permissions "sparewall", "u+w", base: :bin, recursive: false
+      run "/usr/bin/xattr", args: ["-d", "com.apple.quarantine", "{{bin}}/sparewall"],
+          must_succeed: false, print_stderr: false, writable_paths: ["sparewall"], writable_base: :bin
+      set_permissions "sparewall", "u-w", base: :bin, recursive: false
     end
-    odie "#{f} is still quarantined: run xattr -d com.apple.quarantine #{f}" if quarantined.call
   end
 
   test do
