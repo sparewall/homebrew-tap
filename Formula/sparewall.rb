@@ -3,28 +3,28 @@
 class Sparewall < Formula
   desc "CLI for Sparewall, an image-based Linux firewall"
   homepage "https://sparewall.org"
-  version "0.4.0"
+  version "0.5.0"
   license "GPL-3.0-only"
 
   on_macos do
     on_arm do
-      url "https://github.com/sparewall/sparewall/releases/download/v0.4.0/sparewall-0.4.0-aarch64-darwin.tar.gz"
-      sha256 "0b7b63eb03449f63084fd8ceff1e7f203a36354dc4f4ddcd1d49bda957cf8f60"
+      url "https://github.com/sparewall/sparewall/releases/download/v0.5.0/sparewall-0.5.0-aarch64-darwin.tar.gz"
+      sha256 "fc5bc41c91fcd9b4aeee204c6d332efc940473bf878d8084c35ff19b2542da53"
     end
     on_intel do
-      url "https://github.com/sparewall/sparewall/releases/download/v0.4.0/sparewall-0.4.0-x86_64-darwin.tar.gz"
-      sha256 "cd8e0eb72c0917d96b500d497be09852c7b7f1db80048f79a1c7dd494ffb6771"
+      url "https://github.com/sparewall/sparewall/releases/download/v0.5.0/sparewall-0.5.0-x86_64-darwin.tar.gz"
+      sha256 "62df08194ada8d23cce47fee6865847b44e4ae760767e69d13c49d5c12d78adf"
     end
   end
 
   on_linux do
     on_intel do
-      url "https://github.com/sparewall/sparewall/releases/download/v0.4.0/sparewall-0.4.0-x86_64-linux.tar.gz"
-      sha256 "7145e1673b628e1203cc2b57506a9ba263382f96d2ed8533ba928db8917368f2"
+      url "https://github.com/sparewall/sparewall/releases/download/v0.5.0/sparewall-0.5.0-x86_64-linux.tar.gz"
+      sha256 "a013cb0970036e3cd56e7dbe616fcceb2802d898e780b0d05355beac721a78b5"
     end
     on_arm do
-      url "https://github.com/sparewall/sparewall/releases/download/v0.4.0/sparewall-0.4.0-aarch64-linux.tar.gz"
-      sha256 "018c592619a8b604c3e88781cdf656e074cbb932c7f944e1a39526e3d6bdd921"
+      url "https://github.com/sparewall/sparewall/releases/download/v0.5.0/sparewall-0.5.0-aarch64-linux.tar.gz"
+      sha256 "9c3e7987154ffa3a83c455ecc69681afbcc51f2de1fefeb9a83159e9de623858"
     end
   end
 
